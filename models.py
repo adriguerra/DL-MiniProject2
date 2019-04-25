@@ -21,3 +21,4 @@ class Linear(torch.nn.Module):
         raise NotImplementedError
 
     def param(self):
+        raise NotImplementedError
