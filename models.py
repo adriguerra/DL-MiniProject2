@@ -22,3 +22,9 @@ class Linear(torch.nn.Module):
 
     def param(self):
         raise NotImplementedError
+
+class Sequential(torch.nn.Module):
+    def __init__(self, *args):
+        super(Sequential, self).__init__()
+        for idx, module in enumerate(args):
+            self.add_module(str(idx), module)
