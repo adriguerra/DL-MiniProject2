@@ -20,11 +20,10 @@ def relu(x):
 
 def linear(x, w, b=None):
     """Applies a linear transformation to incoming data"""
-    if x.dim() == 2 and b is not None:
-        # fused op is marginally faster
-        return torch.addmm(b, x, weight.t())
+    if b is None:
+        return torch.addmm(b, x, w.t())
     else:
-        output = x.matmul(weight.t())
-        if b is not None:
-            output += b
-        return output
+        return torch.mm(x, w.t())
+
+# TODO
+# def dlinear
