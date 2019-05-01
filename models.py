@@ -28,3 +28,9 @@ class Sequential(torch.nn.Module):
         super(Sequential, self).__init__()
         for idx, module in enumerate(args):
             self.add_module(str(idx), module)
+
+    def forward(self, input):
+        """Apply forward sequentially on every module"""
+        for module in self._modules.values():
+            input = module(input)
+        return input
