@@ -65,11 +65,12 @@ class Sequential(Module):
     def __init__(self, *args):
         super().__init__()
         for idx, module in enumerate(args):
-            self.add_module(str(idx), module)
+            setattr(self, idx, module)
 
     def forward(self, input):
         """Apply forward sequentially on every module"""
-        for module in self._modules.values():
+        for attr in dir(self):
+            module = getattr(self, attr)
             input = module(input)
         return input
 
