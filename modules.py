@@ -10,8 +10,7 @@ class Module(object):
         return []
 
 class Linear(Module):
-"""Applies a linear transformation to incoming data"""
-
+    """Applies a linear transformation to incoming data"""
     def __init__(self, in_features, out_features, bias=True):
         super().__init__()
         self.in_features = in_features
