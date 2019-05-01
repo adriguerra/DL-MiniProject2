@@ -1,31 +1,68 @@
 import torch
 import functions
 
-class Linear(torch.nn.Module):
+class Module(object):
+    def forward(self, input):
+        raise NotImplementedError
+    def backward(self, gradswrtoutput):
+        raise NotImplementedError
+    def param(self):
+        return []
+
+class Linear(Module):
 """Applies a linear transformation to incoming data"""
 
     def __init__(self, in_features, out_features, bias=True):
-            super(Linear, self).__init__()
-            self.in_features = in_features
-            self.out_features = out_features
-            self.weight = torch.Tensor(out_features, in_features)
-            if bias:
-                self.bias = torch.Tensor(out_features)
-            else:
-                self.bias = None
-            # self.reset_parameters()
-    def forward(self, *input):
-        return linear(input, self.weight, self.bias)
+        super().__init__()
+        self.in_features = in_features
+        self.out_features = out_features
+        self.weight = torch.Tensor(out_features, in_features)
+        if bias:
+            self.bias = torch.Tensor(out_features)
+        else:
+            self.bias = None
 
-    def backward(self, *gradwrtoutput):
+    def forward(self, input):
+        s = linear(input, self.weight, self.bias)
+        return s
+
+    def backward(self, gradwrtoutput):
+        return linear(gradwrtoutput, self.weight, bias=None)
+
+    def param(self):
+        return self.weight, self.bias
+
+class ReLU(Module):
+    def __init__(self):
+        super().__init__()
+        raise NotImplementedError
+
+    def forward(self, input):
+        return functions.relu(input)
+
+    def backward(self, input):
+        return functions.relu(input)
+
+    def param(self):
+        return []
+
+class TanH(Module):
+    def __init__(self, *args):
+        super().__init__()
+        raise NotImplementedError
+
+    def forward(self, input):
+        raise NotImplementedError
+
+    def backward (self, gradswrtoutput):
         raise NotImplementedError
 
     def param(self):
-        raise NotImplementedError
+        return []
 
-class Sequential(torch.nn.Module):
+class Sequential(Module):
     def __init__(self, *args):
-        super(Sequential, self).__init__()
+        super().__init__()
         for idx, module in enumerate(args):
             self.add_module(str(idx), module)
 
@@ -34,3 +71,9 @@ class Sequential(torch.nn.Module):
         for module in self._modules.values():
             input = module(input)
         return input
+
+    def backward(self, input):
+        return functions.relu(input)
+
+    def param(self):
+        return []
