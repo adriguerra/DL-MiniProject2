@@ -53,10 +53,10 @@ class TanH(Module):
         raise NotImplementedError
 
     def forward(self, input):
-        raise NotImplementedError
+        return functions.tanh(input)
 
-    def backward (self, gradswrtoutput):
-        raise NotImplementedError
+    def backward(self, gradwrtoutput):
+        return gradwrtoutput * functions.dtanh(self.input)
 
     def param(self):
         return []
