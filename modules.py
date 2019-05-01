@@ -38,10 +38,11 @@ class ReLU(Module):
         raise NotImplementedError
 
     def forward(self, input):
+        self.input = input
         return functions.relu(input)
 
-    def backward(self, input):
-        return functions.relu(input)
+    def backward(self, gradwrtoutput):
+        return gradwrtoutput * functions.drelu(self.input)
 
     def param(self):
         return []
