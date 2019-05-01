@@ -34,7 +34,6 @@ class Linear(Module):
 class ReLU(Module):
     def __init__(self):
         super().__init__()
-        raise NotImplementedError
 
     def forward(self, input):
         self.input = input
@@ -49,7 +48,6 @@ class ReLU(Module):
 class TanH(Module):
     def __init__(self, *args):
         super().__init__()
-        raise NotImplementedError
 
     def forward(self, input):
         return functions.tanh(input)
