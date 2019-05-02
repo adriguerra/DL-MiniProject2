@@ -22,10 +22,11 @@ class Linear(Module):
             self.bias = None
 
     def forward(self, input):
-        s = linear(input, self.weight, self.bias)
-        return s
+        self.input = input
+        return linear(input, self.weight, self.bias)
 
     def backward(self, gradwrtoutput):
+        self.gradwrtoutput = gradwrtoutput
         return linear(gradwrtoutput, self.weight, bias=None)
 
     def param(self):
