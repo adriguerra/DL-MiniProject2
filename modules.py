@@ -63,17 +63,20 @@ class Sequential(Module):
     def __init__(self, *args):
         super().__init__()
         for idx, module in enumerate(args):
-            setattr(self, idx, module)
+            setattr(self, module.__class__.__name__ + str(idx), module)
 
     def forward(self, input):
-        """Apply forward sequentially on every module"""
-        for attr in dir(self):
-            module = getattr(self, attr)
-            input = module(input)
+        """Apply forward pass sequentially on every module"""
+        for module in self.__dict__.values():
+            input = module.forward(input)
         return input
 
-    def backward(self, input):
-        return functions.relu(input)
+    def backward(self, gradwrtoutput):
+        """Apply backward pass sequentially on every module"""
+        # TODO First backward pass: gradwrtoutput = dloss(output, target)
+        for module in self.__dict__.values().reverse():
+            gradwrtoutput = module.backward(gradwrtoutput)
+        return gradwrtoutput
 
     def param(self):
         return []
