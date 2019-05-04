@@ -30,7 +30,7 @@ class Linear(Module):
         return linear(gradwrtoutput, self.weight, bias=None)
 
     def param(self):
-        return self.weight, self.bias
+        return [(self.input, self.gradwrtoutput)]
 
 class ReLU(Module):
     def __init__(self):
@@ -79,4 +79,10 @@ class Sequential(Module):
         return gradwrtoutput
 
     def param(self):
-        return []
+        """Return a list of pairs, each composed of a parameter tensor,
+        and a gradient tensor of same size."""
+        params = []
+        for module in self.__dict__.values():
+            params.extend(module.param())
+        return params
+
