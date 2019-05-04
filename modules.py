@@ -86,3 +86,12 @@ class Sequential(Module):
             params.extend(module.param())
         return params
 
+class MSELoss(Module):
+    def __init__(self):
+        super().__init__()
+
+    def forward(self, input, target):
+        return functions.loss(input, target)
+
+    def backward(self, gradwrtoutput):
+        raise NotImplementedError
