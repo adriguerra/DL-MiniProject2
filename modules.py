@@ -66,13 +66,13 @@ class Sequential(Module):
             setattr(self, module.__class__.__name__ + str(idx), module)
 
     def forward(self, input):
-        """Apply forward pass sequentially on every module"""
+        """Apply forward pass sequentially on every module."""
         for module in self.__dict__.values():
             input = module.forward(input)
         return input
 
     def backward(self, gradwrtoutput):
-        """Apply backward pass sequentially on every module"""
+        """Apply backward pass sequentially on every module."""
         # TODO First backward pass: gradwrtoutput = dloss(output, target)
         for module in self.__dict__.values().reverse():
             gradwrtoutput = module.backward(gradwrtoutput)
