@@ -1,3 +1,5 @@
+import torch
+
 class SGD(object):
     """Implements stochastic gradient descent"""
     def __init__(self, params, lr):
