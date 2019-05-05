@@ -7,6 +7,8 @@ class Module(object):
     def backward(self, gradswrtoutput):
         raise NotImplementedError
     def param(self):
+        """Return a list of pairs, each composed of a parameter tensor,
+        and a gradient tensor of same size.  Typically passed to optimizer."""
         return []
 
 class Linear(Module):
@@ -26,6 +28,8 @@ class Linear(Module):
         return linear(input, self.weight, self.bias)
 
     def backward(self, gradwrtoutput):
+        """Returns the loss derived with respect to the input and computes
+        the derivatives of the loss with respect to the parameters"""
         self.gradwrtoutput = gradwrtoutput
         return linear(gradwrtoutput, self.weight, bias=None)
 
@@ -41,6 +45,7 @@ class ReLU(Module):
         return functions.relu(input)
 
     def backward(self, gradwrtoutput):
+        """Returns the loss derived with respect to the output"""
         return gradwrtoutput * functions.drelu(self.input)
 
     def param(self):
@@ -54,6 +59,7 @@ class TanH(Module):
         return functions.tanh(input)
 
     def backward(self, gradwrtoutput):
+        """Returns the loss derived with respect to the output"""
         return gradwrtoutput * functions.dtanh(self.input)
 
     def param(self):
@@ -73,14 +79,16 @@ class Sequential(Module):
 
     def backward(self, gradwrtoutput):
         """Apply backward pass sequentially on every module."""
-        # TODO First backward pass: gradwrtoutput = dloss(output, target)
-        for module in self.__dict__.values().reverse():
-            gradwrtoutput = module.backward(gradwrtoutput)
+        for idx, module in enumerate(self.__dict__.values().reverse()):
+            if idx == 0:
+                gradwrtoutput = dloss(output, target)
+            else:
+                gradwrtoutput = module.backward(gradwrtoutput)
         return gradwrtoutput
 
     def param(self):
         """Return a list of pairs, each composed of a parameter tensor,
-        and a gradient tensor of same size."""
+        and a gradient tensor of same size. Typically passed to optimizer."""
         params = []
         for module in self.__dict__.values():
             params.extend(module.param())
