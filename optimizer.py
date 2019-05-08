@@ -27,9 +27,9 @@ class SGD(object):
         self.params = param_tmp
 
     def zero_grad(self):
-        r"""Clears the gradients of all optimized :class:`torch.Tensor` s."""
-        for group in self.param_groups:
-            for p in group['params']:
-                if p.grad is not None:
-                    p.grad.detach_()
-                    p.grad.zero_()
+        """Clears the gradients of all Tensors."""
+        param_tmp = []
+        for (p, grad) in self.params:
+            grad = 0
+            param_tmp.append((p, grad))
+        self.params = param_tmp
