@@ -20,8 +20,10 @@ def relu(x):
 
 def linear(x, w, b=None):
     """Applies a linear transformation to incoming data"""
-    if b is None:
+    if b is not None:
+        # return torch.mm(x, w.t()) + b
         return torch.addmm(b, x, w.t())
+        # return torch.mm(x, w.t())
     else:
         return torch.mm(x, w.t())
 
