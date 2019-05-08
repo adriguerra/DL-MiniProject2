@@ -20,8 +20,11 @@ class SGD(object):
 
     def step(self):
         """Performs a single optimization step."""
+        param_tmp = []
         for (p, grad) in self.params:
-            p = p - (self.lr * grad)
+            p -= (self.lr * grad)
+            param_tmp.append((p, grad))
+        self.params = param_tmp
 
     def zero_grad(self):
         r"""Clears the gradients of all optimized :class:`torch.Tensor` s."""
