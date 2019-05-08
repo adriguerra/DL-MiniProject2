@@ -30,7 +30,7 @@ class Linear(Module):
 
     def forward(self, input):
         self.input = input
-        return linear(input, self.weight, self.bias)
+        return functions.linear(input, self.weight, self.bias)
 
     def backward(self, gradwrtoutput):
         """Returns the loss derived with respect to the input and computes
