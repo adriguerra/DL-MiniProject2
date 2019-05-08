@@ -97,11 +97,8 @@ class Sequential(Module):
 
     def backward(self, gradwrtoutput):
         """Apply backward pass sequentially on every module."""
-        for idx, module in enumerate(self.__dict__.values().reverse()):
-            if idx == 0:
-                gradwrtoutput = dloss(output, target)
-            else:
-                gradwrtoutput = module.backward(gradwrtoutput)
+        for module in list(self.__dict__.values())[::-1]:
+            gradwrtoutput = module.backward(gradwrtoutput)
         return gradwrtoutput
 
     def param(self):
