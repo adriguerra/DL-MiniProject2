@@ -18,10 +18,15 @@ class Linear(Module):
         self.in_features = in_features
         self.out_features = out_features
         self.weight = torch.Tensor(out_features, in_features)
+        self.dweight = torch.Tensor(out_features, in_features)
         if bias:
             self.bias = torch.Tensor(out_features)
+            self.dbias = torch.Tensor(out_features)
         else:
             self.bias = None
+            self.dbias = None
+
+        self.reset_parameters()
 
     def forward(self, input):
         self.input = input
@@ -31,7 +36,10 @@ class Linear(Module):
         """Returns the loss derived with respect to the input and computes
         the derivatives of the loss with respect to the parameters"""
         self.gradwrtoutput = gradwrtoutput
-        return linear(gradwrtoutput, self.weight, bias=None)
+        # Derivatives of loss wrt parameters
+        self.dweight = gradwrtoutput.mm(self.input.t())
+        self.dbias = self.gradwrtoutput
+        return functions.linear(gradwrtoutput, self.weight, bias=None)
 
     def param(self):
         return [(self.input, self.gradwrtoutput)]
