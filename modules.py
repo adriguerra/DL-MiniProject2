@@ -37,7 +37,7 @@ class Linear(Module):
         the derivatives of the loss with respect to the parameters"""
         self.gradwrtoutput = gradwrtoutput
         # Derivatives of loss wrt parameters
-        self.dweight = gradwrtoutput.mm(self.input.t())
+        self.dweight = gradwrtoutput.view(-1, 1).mm(self.input.view(1, -1))
         self.dbias = self.gradwrtoutput
         return functions.linear(gradwrtoutput, self.weight, bias=None)
 
