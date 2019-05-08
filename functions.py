@@ -18,14 +18,12 @@ def relu(x):
 # TODO
 # def drelu(x):
 
-def linear(x, w, b=None):
+def linear(input, weights, bias=None):
     """Applies a linear transformation to incoming data"""
-    if b is not None:
-        # return torch.mm(x, w.t()) + b
-        return torch.addmm(b, x, w.t())
-        # return torch.mm(x, w.t())
+    if bias is not None:
+        return torch.addmm(bias, input, weights.t())
     else:
-        return torch.mm(x, w.t())
+        return torch.mm(input, weights.t())
 
 # TODO
 # def dlinear
