@@ -42,7 +42,17 @@ class Linear(Module):
         return functions.linear(gradwrtoutput, self.weight, bias=None)
 
     def param(self):
-        return [(self.input, self.gradwrtoutput)]
+        if self.bias is None and self.dbias is None:
+            return [(self.weight, self.dweight)]
+        else:
+            return [(self.weight, self.dweight), (self.bias, self.dbias)]
+
+    def reset_parameters(self):
+        """Initialize weights using normal distribution"""
+        epsilon = 1e-6
+        self.weight = self.weight.normal_(0, epsilon)
+        if self.bias is not None:
+            self.bias = self.bias.normal_(0, epsilon)
 
 class ReLU(Module):
     def __init__(self):
