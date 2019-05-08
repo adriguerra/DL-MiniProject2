@@ -113,8 +113,10 @@ class MSELoss(Module):
     def __init__(self):
         super().__init__()
 
-    def forward(self, input, target):
-        return functions.loss(input, target)
+    def forward(self, output, target):
+        self.output = output
+        self.target = target
+        return functions.loss(output.float(), target.float())
 
-    def backward(self, gradwrtoutput):
-        raise NotImplementedError
+    def backward(self, gradswrtoutput=1):
+        return gradswrtoutput * functions.dloss(self.output, self.target)
