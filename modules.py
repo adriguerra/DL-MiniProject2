@@ -17,7 +17,8 @@ class Linear(Module):
         super().__init__()
         self.in_features = in_features
         self.out_features = out_features
-        self.weight = torch.Tensor(out_features, in_features) # TODO: False implementation
+        
+        self.weight = torch.Tensor(out_features, in_features)
         self.dweight = torch.Tensor(out_features, in_features)
         if bias:
             self.bias = torch.Tensor(out_features)
@@ -37,9 +38,9 @@ class Linear(Module):
         the derivatives of the loss with respect to the parameters"""
         self.gradwrtoutput = gradwrtoutput
         # Derivatives of loss wrt parameters
-        self.dweight = gradwrtoutput.view(-1, 1).mm(self.input.view(1, -1))
+        self.dweight = gradwrtoutput.t().mm(self.input)
         self.dbias = self.gradwrtoutput
-        return functions.linear(gradwrtoutput, self.weight, bias=None)
+        return gradwrtoutput.mm(self.weight)
 
     def param(self):
         if self.bias is None and self.dbias is None:
@@ -91,6 +92,7 @@ class TanH(Module):
         super().__init__()
 
     def forward(self, input):
+        self.input = input
         return functions.tanh(input)
 
     def backward(self, gradwrtoutput):
