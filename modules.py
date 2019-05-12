@@ -17,6 +17,7 @@ class Linear(Module):
         super().__init__()
         self.in_features = in_features
         self.out_features = out_features
+        
         self.weight = torch.Tensor(out_features, in_features)
         self.dweight = torch.Tensor(out_features, in_features)
         if bias:
@@ -37,7 +38,7 @@ class Linear(Module):
         the derivatives of the loss with respect to the parameters"""
         self.gradwrtoutput = gradwrtoutput
         # Derivatives of loss wrt parameters
-        self.dweight = gradwrtoutput.view(-1, 1).mm(self.input.view(1, -1))
+        self.dweight = gradwrtoutput.t().mm(self.input)
         self.dbias = self.gradwrtoutput
         return gradwrtoutput.mm(self.weight)
 
