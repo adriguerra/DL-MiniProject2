@@ -15,8 +15,10 @@ def dloss(v, t):
 def relu(x):
     return torch.max(x, torch.empty(x.size()))
 
-# TODO
-# def drelu(x):
+def drelu(x):
+    ones = torch.ones(x.shape)
+    zeros = torch.zeros(x.shape)
+    return torch.where((x > 0), ones, zeros)
 
 def linear(input, weights, bias=None):
     """Applies a linear transformation to incoming data"""
