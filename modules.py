@@ -50,11 +50,10 @@ class Linear(Module):
     def reset_parameters(self):
         """Initialize weights using normal distribution"""
         epsilon = 1e-6
-        self.weight = self.weight.normal_(0, epsilon)
+        self.weight = xavier_normal_(self.weight)
         if self.bias is not None:
             self.bias = self.bias.normal_(0, epsilon)
-            
-            
+
     def _calculate_fan_in_and_fan_out(tensor):
     fan_in = tensor.size(1)
     fan_out = tensor.size(0)
@@ -69,7 +68,7 @@ class Linear(Module):
         std = math.sqrt(2.0 / float(fan_in + fan_out))
         return _no_grad_normal_(tensor, 0., std)
 
-    
+
 class ReLU(Module):
     def __init__(self):
         super().__init__()
