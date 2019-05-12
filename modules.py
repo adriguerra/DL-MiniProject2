@@ -39,7 +39,7 @@ class Linear(Module):
         # Derivatives of loss wrt parameters
         self.dweight = gradwrtoutput.view(-1, 1).mm(self.input.view(1, -1))
         self.dbias = self.gradwrtoutput
-        return functions.linear(gradwrtoutput, self.weight, bias=None)
+        return gradwrtoutput.mm(self.weight)
 
     def param(self):
         if self.bias is None and self.dbias is None:
