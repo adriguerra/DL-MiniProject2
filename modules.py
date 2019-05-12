@@ -59,11 +59,13 @@ class ReLU(Module):
         super().__init__()
 
     def forward(self, input):
+        # s
         self.input = input
         return functions.relu(input)
 
     def backward(self, gradwrtoutput):
         """Returns the loss derived with respect to the output"""
+        # dlds
         return gradwrtoutput * functions.drelu(self.input)
 
     def param(self):
@@ -78,6 +80,7 @@ class TanH(Module):
 
     def backward(self, gradwrtoutput):
         """Returns the loss derived with respect to the output"""
+        # dlds
         return gradwrtoutput * functions.dtanh(self.input)
 
     def param(self):
@@ -87,6 +90,7 @@ class Sequential(Module):
     def __init__(self, *args):
         super().__init__()
         for idx, module in enumerate(args):
+            # TODO fix str(idx)
             setattr(self, module.__class__.__name__ + str(idx), module)
 
     def forward(self, input):
