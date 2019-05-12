@@ -17,7 +17,7 @@ class Linear(Module):
         super().__init__()
         self.in_features = in_features
         self.out_features = out_features
-        self.weight = torch.Tensor(out_features, in_features)
+        self.weight = torch.Tensor(out_features, in_features) # TODO: False implementation
         self.dweight = torch.Tensor(out_features, in_features)
         if bias:
             self.bias = torch.Tensor(out_features)
@@ -53,7 +53,23 @@ class Linear(Module):
         self.weight = self.weight.normal_(0, epsilon)
         if self.bias is not None:
             self.bias = self.bias.normal_(0, epsilon)
+            
+            
+    def _calculate_fan_in_and_fan_out(tensor):
+    fan_in = tensor.size(1)
+    fan_out = tensor.size(0)
+    return fan_in, fan_out
 
+    def _no_grad_normal_(tensor, mean, std):
+        with torch.no_grad():
+            return tensor.normal_(mean, std)
+
+    def xavier_normal_(tensor):
+        fan_in, fan_out = _calculate_fan_in_and_fan_out(tensor)
+        std = math.sqrt(2.0 / float(fan_in + fan_out))
+        return _no_grad_normal_(tensor, 0., std)
+
+    
 class ReLU(Module):
     def __init__(self):
         super().__init__()
