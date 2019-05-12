@@ -76,6 +76,7 @@ class TanH(Module):
         super().__init__()
 
     def forward(self, input):
+        self.input = input
         return functions.tanh(input)
 
     def backward(self, gradwrtoutput):
