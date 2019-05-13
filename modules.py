@@ -41,7 +41,7 @@ class Linear(Module):
         self.gradwrtoutput = gradwrtoutput
         # Derivatives of loss wrt parameters
         self.dweight = gradwrtoutput.t().mm(self.input)
-        self.dbias = self.gradwrtoutput
+        self.dbias = self.gradwrtoutput.t().sum(1)
         return gradwrtoutput.mm(self.weight)
 
     def param(self):
