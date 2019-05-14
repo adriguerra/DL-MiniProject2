@@ -15,7 +15,8 @@ def drelu(x):
     return torch.where((x > 0), ones, zeros)
 
 def loss(v, t):
-    return (v - t).pow(2).sum()
+    n = t.shape[0]
+    return (v - t).pow(2).sum() / n
 
 def dloss(v, t):
     return 2 * (v - t)
