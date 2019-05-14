@@ -22,7 +22,6 @@ class Module(object):
 class Linear(Module):
     """Applies a linear transformation to incoming data."""
     def __init__(self, in_features, out_features, bias=True):
-        super().__init__()
         self.in_features = in_features
         self.out_features = out_features
 
@@ -37,6 +36,7 @@ class Linear(Module):
             self.dbias = None
 
         self.reset_parameters()
+        super().__init__()
 
     def forward(self, input):
         """Applies the forward pass by returning a linear function wx + b,
