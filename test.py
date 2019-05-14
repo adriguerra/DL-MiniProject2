@@ -11,5 +11,19 @@ def convert_to_one_hot_labels(input, target):
     tmp.scatter_(1, target.view(-1, 1), 1.0)
     return tmp
 
+# Generate data
 train_input, train_target = generate_disc_set(1000)
+# Convert to one-hot labels
 train_target = convert_to_one_hot_labels(train_input, train_target)
+# Example run
+architecture = modules.Sequential(modules.Linear(2, 25),
+                                  modules.TanH(),
+                                  modules.Linear(25, 25),
+                                  modules.TanH(),
+                                  modules.Linear(25, 25),
+                                  modules.TanH(),
+                                  modules.Linear(25, 25),
+                                  modules.TanH(),
+                                  modules.Linear(25, 2),
+                                  modules.MSELoss()
+                                 )
