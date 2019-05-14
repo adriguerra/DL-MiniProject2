@@ -107,10 +107,13 @@ class TanH(Module):
 
 class Sequential(Module):
     def __init__(self, *args):
-        super().__init__()
+        if not isinstance(args[-1], MSELoss):
+            raise TypeError("Last module must be a loss.")
+
         for idx, module in enumerate(args):
-            # TODO fix str(idx)
-            setattr(self, module.__class__.__name__ + str(idx), module)
+            module_name = module.__class__.__name__
+            setattr(self, module_name + str(idx), module)
+        super().__init__()
 
     def forward(self, input):
         """Apply forward pass sequentially on every module."""
@@ -118,7 +121,7 @@ class Sequential(Module):
             input = module.forward(input)
         return input
 
-    def backward(self, gradwrtoutput):
+    def backward(self, gradwrtoutput=1):
         """Apply backward pass sequentially on every module."""
         for module in list(self.__dict__.values())[::-1]:
             gradwrtoutput = module.backward(gradwrtoutput)
@@ -133,13 +136,18 @@ class Sequential(Module):
         return params
 
 class MSELoss(Module):
-    def __init__(self):
+    def __init__(self, target):
+        self.target = target.float()
         super().__init__()
 
-    def forward(self, output, target):
-        self.output = output
-        self.target = target
-        return functions.loss(output.float(), target.float())
+    def forward(self, output):
+        """Compute the mean-squared error of the output and the target."""
+        self.output = output.float()
+        loss = functions.loss(self.output, self.target)
+        return (output, loss)
 
     def backward(self, gradswrtoutput=1):
-        return gradswrtoutput * functions.dloss(self.output, self.target)
+        """Compute the derivative of the mean-squared error of the output and
+        the target."""
+        dloss = gradswrtoutput * functions.dloss(self.output, self.target)
+        return dloss
