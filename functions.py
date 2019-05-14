@@ -26,6 +26,3 @@ def linear(input, weights, bias=None):
         return torch.addmm(bias, input, weights.t())
     else:
         return torch.mm(input, weights.t())
-
-# TODO
-# def dlinear
