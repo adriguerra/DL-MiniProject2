@@ -10,7 +10,7 @@ class Module(object):
         raise NotImplementedError
     def param(self):
         """Return a list of pairs, each composed of a parameter tensor,
-        and a gradient tensor of same size.  Typically passed to optimizer."""
+        and a gradient tensor of same size. Typically passed to optimizer."""
         return []
 
 class Linear(Module):
