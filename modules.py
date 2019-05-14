@@ -20,11 +20,12 @@ class Linear(Module):
         self.in_features = in_features
         self.out_features = out_features
 
-        self.weight = torch.Tensor(out_features, in_features)
-        self.dweight = torch.Tensor(out_features, in_features)
+        self.weight = torch.zeros(out_features, in_features)
+        self.dweight = torch.zeros(out_features, in_features)
+
         if bias:
-            self.bias = torch.Tensor(out_features)
-            self.dbias = torch.Tensor(out_features)
+            self.bias = torch.zeros(out_features)
+            self.dbias = torch.zeros(out_features)
         else:
             self.bias = None
             self.dbias = None
