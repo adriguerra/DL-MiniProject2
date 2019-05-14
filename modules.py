@@ -6,9 +6,12 @@ import init
 class Module(object):
 
     def forward(self, input):
+        """Apply the module's forward pass and save the input as a parameter."""
         raise NotImplementedError
 
     def backward(self, gradswrtoutput):
+        """Apply the module's backward pass and save the gradient with respect
+        to output as a parameter."""
         raise NotImplementedError
 
     def param(self):
@@ -17,7 +20,7 @@ class Module(object):
         return []
 
 class Linear(Module):
-    """Applies a linear transformation to incoming data"""
+    """Applies a linear transformation to incoming data."""
     def __init__(self, in_features, out_features, bias=True):
         super().__init__()
         self.in_features = in_features
@@ -36,19 +39,27 @@ class Linear(Module):
         self.reset_parameters()
 
     def forward(self, input):
+        """Applies the forward pass by returning a linear function wx + b,
+        where x is the input, w the weights and b the bias and saves the input
+        for the backward pass to compute its computations."""
         self.input = input
         return functions.linear(self.input, self.weight, self.bias)
 
     def backward(self, gradwrtoutput):
-        """Returns the loss derived with respect to the input and computes
-        the derivatives of the loss with respect to the parameters"""
+        """Applies the backward pass by computing the loss derived with respect
+        to the input and saves the derivatives of the loss with respect to the
+        weights and bias."""
+        # Save the gradient with respect to the output
         self.gradwrtoutput = gradwrtoutput
-        # Derivatives of loss wrt parameters
+        # Derivative of the loss with respect to weight
         self.dweight = gradwrtoutput.t().mm(self.input)
+        # Derivative of the loss with respect to bias
         self.dbias = self.gradwrtoutput.t().sum(1)
         return gradwrtoutput.mm(self.weight)
 
     def param(self):
+        """Returns the module's weights, weight derviatives, bias and bias
+        derivative in a list of tuples."""
         if self.bias is None and self.dbias is None:
             return [(self.weight, self.dweight)]
         else:
@@ -66,13 +77,12 @@ class ReLU(Module):
         super().__init__()
 
     def forward(self, input):
-        # s
+        """Apply the ReLu activation function on the input and save the input."""
         self.input = input
         return functions.relu(input)
 
     def backward(self, gradwrtoutput):
         """Returns the loss derived with respect to the output"""
-        # dlds
         return gradwrtoutput * functions.drelu(self.input)
 
     def param(self):
@@ -83,12 +93,13 @@ class TanH(Module):
         super().__init__()
 
     def forward(self, input):
+        """Apply the hyperbolic tangent activation function on the input and
+        save the input."""
         self.input = input
         return functions.tanh(input)
 
     def backward(self, gradwrtoutput):
         """Returns the loss derived with respect to the output"""
-        # dlds
         return gradwrtoutput * functions.dtanh(self.input)
 
     def param(self):
