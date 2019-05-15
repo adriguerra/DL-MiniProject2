@@ -66,7 +66,7 @@ class Linear(Module):
             return [(self.weight, self.dweight), (self.bias, self.dbias)]
 
     def reset_parameters(self):
-        """Initialize weights using normal distribution"""
+        """Initialize weights using Xavier initialization for weights and normal distribution for bias"""
         epsilon = 1e-6
         self.weight = init.xavier_normal_(self.weight)
         if self.bias is not None:
