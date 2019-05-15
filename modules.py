@@ -5,7 +5,7 @@ import init
 
 class Module(object):
 
-    def forward(self, input):
+    def forward(self, *input):
         """Apply the module's forward pass and save the input as a parameter."""
         raise NotImplementedError
 
@@ -66,7 +66,8 @@ class Linear(Module):
             return [(self.weight, self.dweight), (self.bias, self.dbias)]
 
     def reset_parameters(self):
-        """Initialize weights using Xavier initialization for weights and normal distribution for bias"""
+        """Initialize weights using Xavier initialization for weights and
+        normal distribution for bias."""
         epsilon = 1e-6
         self.weight = init.xavier_normal_(self.weight)
         if self.bias is not None:
@@ -115,11 +116,15 @@ class Sequential(Module):
             setattr(self, module_name + str(idx), module)
         super().__init__()
 
-    def forward(self, input):
+    def forward(self, input, target):
         """Apply forward pass sequentially on every module."""
-        for module in self.__dict__.values():
+        attrs = list(self.__dict__.values())
+        criterion = attrs[-1]
+
+        for module in attrs[:-1]:
             input = module.forward(input)
-        return input
+
+        return criterion.forward(input, target)
 
     def backward(self, gradwrtoutput=1):
         """Apply backward pass sequentially on every module."""
@@ -136,13 +141,13 @@ class Sequential(Module):
         return params
 
 class MSELoss(Module):
-    def __init__(self, target):
-        self.target = target.float()
+    def __init__(self):
         super().__init__()
 
-    def forward(self, output):
+    def forward(self, output, target):
         """Compute the mean-squared error of the output and the target."""
         self.output = output.float()
+        self.target = target.float()
         loss = functions.loss(self.output, self.target)
         return (output, loss)
 
