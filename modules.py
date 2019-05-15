@@ -52,9 +52,9 @@ class Linear(Module):
         # Save the gradient with respect to the output
         self.gradwrtoutput = gradwrtoutput
         # Derivative of the loss with respect to weight
-        self.dweight = gradwrtoutput.t().mm(self.input)
+        self.dweight += gradwrtoutput.t().mm(self.input)
         # Derivative of the loss with respect to bias
-        self.dbias = self.gradwrtoutput.t().sum(1)
+        self.dbias += self.gradwrtoutput.t().sum(1)
         return gradwrtoutput.mm(self.weight)
 
     def param(self):

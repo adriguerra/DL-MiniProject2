@@ -3,25 +3,28 @@ import modules
 
 class SGD(object):
     """Implements stochastic gradient descent"""
-    def __init__(self, arch, lr):
+    def __init__(self, params, lr):
         if lr < 0.0:
             raise ValueError("Invalid learning rate: {}".format(lr))
 
         self.lr = lr
 
-        if not isinstance(arch, modules.Module):
-            raise TypeError("Architecture given to the optimizer should be "
-                            "an instance of a module, but got " +
-                            torch.typename(arch))
+        if isinstance(params, torch.Tensor):
+            raise TypeError("params argument given to the optimizer should be "
+                            "an iterable of Tensors or dicts, but got " +
+                            torch.typename(params))
 
-        self.arch = arch
+        if len(params) == 0:
+            raise ValueError("optimizer got an empty parameter list")
+
+        self.params = params
 
     def step(self):
         """Performs a single optimization step."""
-        for (p, grad) in self.arch.param():
+        for (p, grad) in self.params:
             p.data -= (self.lr * grad)
 
     def zero_grad(self):
         """Clears the gradients of all Tensors."""
-        for (p, grad) in self.arch.param():
-            grad.data = torch.zeros(grad.shape)
+        for (p, grad) in self.params:
+            grad.zero_()
