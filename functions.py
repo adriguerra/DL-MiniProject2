@@ -7,7 +7,7 @@ def dtanh(x):
     return 4 * (x.exp() + x.mul(-1).exp()).pow(-2)
 
 def relu(x):
-    return torch.max(x, torch.empty(x.size()))
+    return torch.max(x, torch.zeros(x.size()))
 
 def drelu(x):
     ones = torch.ones(x.shape)
