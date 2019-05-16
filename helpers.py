@@ -10,3 +10,12 @@ def convert_to_one_hot_labels(input, target):
     tmp = input.new_zeros(target.size(0), target.max() + 1)
     tmp.scatter_(1, target.view(-1, 1), 1.0)
     return tmp
+
+def compute_nb_errors(pred, target):
+    nb_errors = 0
+    _, predicted_classes = pred.max(1)
+    _, target_classes = target.max(1)
+    for k in range(target.shape[0]):
+        if predicted_classes[k] != target_classes[k]:
+            nb_errors = nb_errors + 1
+    return nb_errors
