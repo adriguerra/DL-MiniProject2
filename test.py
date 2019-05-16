@@ -54,10 +54,11 @@ for e in range(nb_epochs):
     sum_loss = 0
     for b in range(0, train_input.size(0), mini_batch_size):
         output, loss = model1.forward(train_input.narrow(0, b, mini_batch_size), train_target.narrow(0, b, mini_batch_size))
+        optimizer1.zero_grad()
         grad = model1.backward()
         sum_loss = sum_loss + loss.item()
         optimizer1.step()
-        optimizer1.zero_grad()
+
     print("Iteration {0:}: loss = {1:.3f}".format(e+1, sum_loss), end='\r', flush=True)
 loss_train = sum_loss
 
@@ -81,10 +82,11 @@ for e in range(nb_epochs):
     sum_loss = 0
     for b in range(0, train_input.size(0), mini_batch_size):
         output, loss = model2.forward(train_input.narrow(0, b, mini_batch_size), train_target.narrow(0, b, mini_batch_size))
+        optimizer2.zero_grad()
         grad = model2.backward()
         sum_loss = sum_loss + loss.item()
         optimizer2.step()
-        optimizer2.zero_grad()
+
     print("Iteration {0:}: loss = {1:.3f}".format(e+1, sum_loss), end='\r', flush=True),
 
 loss_train = sum_loss
