@@ -60,7 +60,7 @@ for e in range(nb_epochs):
         optimizer1.step()
 
     print("Iteration {0:}: loss = {1:.3f}".format(e+1, sum_loss), end='\r', flush=True)
-loss_train = sum_loss
+loss_train = sum_loss / mini_batch_size
 
 print()
 print("#" * 50)
@@ -89,7 +89,7 @@ for e in range(nb_epochs):
 
     print("Iteration {0:}: loss = {1:.3f}".format(e+1, sum_loss), end='\r', flush=True),
 
-loss_train = sum_loss
+loss_train = sum_loss / mini_batch_size
 
 print()
 print("#" * 50)
