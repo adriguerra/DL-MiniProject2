@@ -4,7 +4,7 @@ import math
 import init
 
 class Module(object):
-
+    """Base class for all neural network modules."""
     def forward(self, *input):
         """Apply the module's forward pass and save the input as a parameter."""
         raise NotImplementedError
@@ -74,6 +74,7 @@ class Linear(Module):
             self.bias = self.bias.normal_(0, epsilon)
 
 class ReLU(Module):
+    """Applies the rectified linear unit function element-wise."""
     def __init__(self):
         super().__init__()
 
@@ -90,6 +91,7 @@ class ReLU(Module):
         return []
 
 class TanH(Module):
+    """Applies the hyperbolic tangent element-wise function"""
     def __init__(self, *args):
         super().__init__()
 
@@ -107,6 +109,8 @@ class TanH(Module):
         return []
 
 class Sequential(Module):
+    """A sequential container. Modules are added to it in the order they
+    are passed in the constructor."""
     def __init__(self, *args):
         if not isinstance(args[-1], MSELoss):
             raise TypeError("Last module must be a loss.")
@@ -141,6 +145,8 @@ class Sequential(Module):
         return params
 
 class MSELoss(Module):
+    """Computes the mean squared error (squared L2 norm) between each element
+    in the input x and target y."""
     def __init__(self):
         super().__init__()
 
