@@ -5,7 +5,7 @@ def generate_disc_set(nb):
     """Generates a data set (input and target) sampled uniformly between 0 and
     1 with a label 0 if outside the disk of radius 1/sqrt(2pi) and 1 inside."""
     input = torch.Tensor(nb, 2).uniform_(0, 1)
-    target = input.pow(2).sum(1).sub(1 / (2 * math.pi)).sign().add(1).div(2).long()
+    target = input.sub(0.5).pow(2).sum(1).sub(1 / (2 * math.pi)).sign().add(1).div(2).long()
     return input, target
 
 def convert_to_one_hot_labels(input, target):
