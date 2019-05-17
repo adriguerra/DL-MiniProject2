@@ -15,6 +15,10 @@ train_target = convert_to_one_hot_labels(train_input, train_target)
 test_target = convert_to_one_hot_labels(test_input, test_target)
 # Avoid vanishing gradient
 train_input = 0.9 * train_input
+# Normalize data
+mean, std = train_input.mean(), train_input.std()
+train_input.sub_(mean).div_(std)
+test_input.sub_(mean).div_(std)
 
 # Define models
 model1 = modules.Sequential(modules.Linear(2, 25),
@@ -64,21 +68,21 @@ for e in range(nb_epochs):
 
     print("Iteration {0:}: loss = {1:.3f}".format(e+1, sum_loss), end='\r', flush=True)
 
-loss_train = sum_loss/(train_input.shape[0]/mini_batch_size)
+loss_train1 = sum_loss/(train_input.shape[0]/mini_batch_size)
 
 print()
 print("#" * 50)
 
 # Test model 1
-output_test1, loss_test = model1.forward(test_input, test_target)
+output_test1, loss_test1 = model1.forward(test_input, test_target)
 nb_err_test1 = compute_nb_errors(output_test1, test_target)
 
 # Print results
 print("Model 1 with TanH results")
-print("Training loss: {:.3f}".format(loss_train))
-print("Test loss: {:.3f}".format(loss_test))
-print("Number of errors on train set: {0:.2f}%".format((100*(nb_err1/train_target.shape[0]))))
-print("Number of errors on test set: {0:.2f}%".format((100*(nb_err_test1/train_target.shape[0]))))
+print("Training loss: {:.3f}".format(loss_train1))
+print("Test loss: {:.3f}".format(loss_test1))
+print("Number of errors on train set: {:.2f}%".format((100*(nb_err1/train_target.shape[0]))))
+print("Number of errors on test set: {:.2f}%".format((100*(nb_err_test1/train_target.shape[0]))))
 
 
 print("#" * 50)
@@ -98,17 +102,18 @@ for e in range(nb_epochs):
 
     print("Iteration {0:}: loss = {1:.3f}".format(e+1, sum_loss), end='\r', flush=True),
 
-loss_train = sum_loss/(train_input.shape[0]/mini_batch_size)
+loss_train2 = sum_loss/(train_input.shape[0]/mini_batch_size)
 
 print()
 print("#" * 50)
 
 # Test model 2
-output_test2, loss_test = model2.forward(test_input, test_target)
+output_test2, loss_test2 = model2.forward(test_input, test_target)
 nb_err_test2 = compute_nb_errors(output_test2, test_target)
 
 print("Model 2 with ReLu results")
-print("Training loss: {:.3f}".format(loss_train))
-print("Test loss: {:.3f}".format(loss_test))
-print("Number of errors on train set: {0:.2f}%".format((100*(nb_err2/train_target.shape[0]))))
-print("Number of errors on test set: {0:.2f}%".format((100*(nb_err_test2/train_target.shape[0]))))
+print("Training loss: {:.3f}".format(loss_train2))
+print("Test loss: {:.3f}".format(loss_test2))
+
+print("Number of errors on train set: {:.2f}%".format((100*(nb_err2/train_target.shape[0]))))
+print("Number of errors on test set: {:.2f}%".format((100*(nb_err_test2/train_target.shape[0]))))
