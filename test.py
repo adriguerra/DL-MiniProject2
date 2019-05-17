@@ -66,9 +66,11 @@ for e in range(nb_epochs):
         optimizer1.step()
         nb_err1 = nb_err1 + compute_nb_errors(output, train_target.narrow(0, b, mini_batch_size))
 
-    print("Iteration {0:}: loss = {1:.3f}".format(e+1, sum_loss), end='\r', flush=True)
+    print("Iteration {0:}: loss = {1:.3f}".format(e+1, sum_loss / (train_input.shape[0]/mini_batch_size)),
+          end='\r',
+          flush=True)
 
-loss_train1 = sum_loss/(train_input.shape[0]/mini_batch_size)
+loss_train1 = sum_loss / (train_input.shape[0]/mini_batch_size)
 
 print()
 print("#" * 50)
@@ -100,9 +102,11 @@ for e in range(nb_epochs):
         optimizer2.step()
         nb_err2 = nb_err2 + compute_nb_errors(output, train_target.narrow(0, b, mini_batch_size))
 
-    print("Iteration {0:}: loss = {1:.3f}".format(e+1, sum_loss), end='\r', flush=True),
+    print("Iteration {0:}: loss = {1:.3f}".format(e+1, sum_loss / (train_input.shape[0]/mini_batch_size)),
+          end='\r',
+          flush=True),
 
-loss_train2 = sum_loss/(train_input.shape[0]/mini_batch_size)
+loss_train2 = sum_loss / (train_input.shape[0]/mini_batch_size)
 
 print()
 print("#" * 50)
